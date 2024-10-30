@@ -1,45 +1,49 @@
 $(document).ready(function () {
-    const btn = $("#submitDay");
+  // JSON File Link: https://api.npoint.io/63a88c84843d6c783c74 //
+  const scheduleContainer = $("#scheduleList");
+  const btn = $("#submitDay");
 
-    const bellSchedule = {
-        1: { start: '8:24 AM', end: '9:31 AM' },
-        2: { start: '9:36 AM', end: '10:43 AM' },
-        3: { start: '10:48 AM', end: '11:55 AM' },
-        4: { start: '12:41 PM', end: '1:48 PM' },
-        5: { start: '1:53 PM', end: '3:00 PM' }
-      }
+  btn.on("click", function () {
+    //Valdidate the input
 
+    let selectedDay = $("#dayInput").val().trim().toUpperCase();
+    console.log(selectedDay);
 
-    btn.on('click', function () {
-        const selectedDay = $("#dayInput").val().trim().toUpperCase();
-
-        // Validate the day input
-        if (!["A", "B", "C", "D", "E", "F", "G"].includes(selectedDay)) {
-            alert("Please enter a valid day (A-G)");
-            return;
-        }
-        
-        $.ajax({
-            url: `https://api.npoint.io/3483a859c779a0823165`,
-            method: 'GET',
-            success: function (data) {
-                const schedule = data.schedule
-                const daySchedule = schedule.filter(item => 
-                    item.days.includes(selectedDay),
-                    renderHtml(data)
-
-                )
-    
-            },
-            error: function () {
-                alert("Theres a connection error");
-            }
-        });
-    })
-
-    function renderHtml(data){
-
+    if (!["A", "B", "C", "D", "E", "F", "G"].includes(selectedDay)) {
+      alert("You need to type a valid letter day!");
+      return;
+    } else {
+      $.ajax({
+        url: "https://api.npoint.io/3483a859c779a0823165",
+        method: "GET",
+        success: function (data) {
+          const schedule = data.schedule;
+          console.log(schedule);
+          const daySchedule = schedule.filter((item) =>
+            item.days.includes(selectedDay)
+          );
+          console.log(daySchedule);
+          renderHTML(daySchedule);
+        },
+      });
     }
 
+    function renderHTML(daySchedule) {
+      $("#scheduleList").empty();
+      var htmlString = "";
+      daySchedule.forEach(function (classItem) {
+        htmlString += `
+                    <tr>
+                    <td>${classItem.period}</td>
+                    <td>${classItem.class}</td>
+                    <td>${classItem.teacher}</td>
+                    <td>${classItem.room}</td>
+                   </tr> `;
+      });
 
-})
+      $("#scheduleList").append(htmlString);
+    }
+  });
+
+  //filter the data to show only the classes that meet on the letter day entered //
+});
