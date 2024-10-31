@@ -1,0 +1,11 @@
+body {
+    background-image: url(gradient.jpg) ;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h1 {
+    font-family: "hellofont-id-hunyuanti", sans-serif;
+font-weight: 400;
+font-style: normal;
+}
